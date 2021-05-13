@@ -1,0 +1,83 @@
+import javax.swing.*; // Server end 
+import java.awt.event.*;
+import java.net.*;
+import java.io.*;
+
+public class UIMyServer1 extends JFrame implements ActionListener
+{
+JPanel jp;
+JLabel jl;
+JButton b;
+public UIMyServer1(String s)
+{ super(s);
+  jp= new JPanel();
+  jl=new JLabel("Here data from client");
+  b = new JButton("Recieve");
+  b.addActionListener(this);
+   jp.add(jl);
+  jp.add(b);
+this.add(jp);  
+}
+public void actionPerformed(ActionEvent ae)
+{
+  try{
+ ServerSocket ss=new ServerSocket(333);
+ Socket s=ss.accept();
+ DataInputStream ds=new DataInputStream(s.getInputStream());
+ String str=ds.readUTF();
+ jl.setText(str);
+ ss.close();
+ }
+ catch(Exception e){
+ System.out.println(e);
+ }
+ }
+ public static void main(String args[])
+  {
+  JFrame jf=new UIMyServer1("Server1");
+  jf.setSize(500,500);
+  jf.setVisible(true);
+  }
+ }
+ 
+import javax.swing.*; // Client end
+import java.awt.event.*;
+import java.net.*;
+import java.io.*;
+public class UIMyClient1 extends JFrame implements ActionListener
+{
+  JPanel jp;
+  JTextField jt;
+  JButton jb;
+  public UIMyClient1(String s)
+  {
+    jp=new JPanel();
+	jt= new JTextField(10);
+	jb= new JButton("Send");
+	jb.addActionListener(this);
+	jp.add(jt);
+	jp.add(jb);
+	this.add(jp);
+	}
+	public void actionPerformed(ActionEvent ae)
+	{
+	  try{
+  Socket s=new Socket("localhost",333);
+  DataOutputStream dos=new DataOutputStream(s.getOutputStream());
+  String s1=jt.getText();
+  dos.writeUTF(s1);
+  dos.flush();
+  dos.close();
+  s.close();
+  }
+  catch(Exception e){System.out.println(e);}
+  }
+  public static void main(String args[])
+  {
+  JFrame jf=new UIMyClient1("Client 1");
+  jf.setSize(500,500);
+  jf.setVisible(true);
+  
+  }
+  }
+
